@@ -39,14 +39,15 @@
             transform: scale(1.05);
         }
         .writing {
-            margin-top: 40px;
-            line-height: 1.6;
-            background: #fff0f2;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 2px 2px 8px rgba(168,50,62,0.3);
-            white-space: pre-wrap;
-        }
+        margin-top: 40px;
+        line-height: 1.6;
+        background: #fff0f2;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 2px 2px 8px rgba(168,50,62,0.3);
+        white-space: pre-wrap; /* লাইন ব্রেক রাখবে কিন্তু ডিভের বাইরে যাবে না */
+        overflow-wrap: break-word; /* বড় শব্দ ভেঙে ফেলবে */
+    }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -180,3 +181,4 @@
 
 </body>
 </html>
+
