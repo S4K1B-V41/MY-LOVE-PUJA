@@ -39,41 +39,60 @@
             transform: scale(1.05);
         }
         .writing {
-        margin-top: 40px;
-        line-height: 1.6;
-        background: #fff0f2;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 2px 2px 8px rgba(168,50,62,0.3);
-        white-space: pre-wrap; /* লাইন ব্রেক রাখবে কিন্তু ডিভের বাইরে যাবে না */
-        overflow-wrap: break-word; /* বড় শব্দ ভেঙে ফেলবে */
-    }
+            margin-top: 40px;
+            line-height: 1.6;
+            background: #fff0f2;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 2px 2px 8px rgba(168,50,62,0.3);
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .modal img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 10px;
+        }
+        .close, .prev, .next {
+            position: absolute;
+            color: white;
+            font-size: 2rem;
+            padding: 10px;
+            cursor: pointer;
+            user-select: none;
+            background: rgba(0,0,0,0.3);
+            border-radius: 5px;
+        }
+        .close { top: 20px; right: 20px; }
+        .prev { left: 20px; top: 50%; transform: translateY(-50%); }
+        .next { right: 20px; top: 50%; transform: translateY(-50%); }
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            body {
-                margin: 10px;
-            }
-            h1 {
-                font-size: 1.5rem;
-            }
-            h2 {
-                font-size: 1.2rem;
-            }
-            .gallery {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            }
+            body { margin: 10px; }
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.2rem; }
+            .gallery { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
         }
         @media (max-width: 480px) {
-            h1 {
-                font-size: 1.3rem;
-            }
-            h2 {
-                font-size: 1rem;
-            }
-            .gallery {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
+            h1 { font-size: 1.3rem; }
+            h2 { font-size: 1rem; }
+            .gallery { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
         }
     </style>
 </head>
@@ -115,7 +134,7 @@
         <img src="images/pic (29).jpeg" alt="ছবি ২৯" />
         <img src="images/pic (30).jpeg" alt="ছবি ৩০" />
         <img src="images/pic (31).jpeg" alt="ছবি ৩১" />
-        <img src="images/pic.png" alt="puja 32">
+        <img src="images/pic.png" alt="puja 32" />
     </div>
 
     <h2>ভালোবাসার কষ্টের লেখা</h2>
@@ -176,9 +195,69 @@
 “আমরা একে অপরকে পেয়েছি… শুধু এক জীবনে নয়, হয়তো পরের জন্মে।”
 
 মনের ব্যথা এমন এক যন্ত্রণা, যা চোখে বোঝানো যায় না, শুধু হৃদয় বুঝতে পারে।
-তুমি যেভাবে চলে গেছো, মনে হয় যেন জীবনের আকাশ বৃষ্টি হয়ে গেছে।
+তুমি যেভাবে চলে গেছো, মনে হয় যেন জীবনের আকাশ বৃষ্টি হয়ে গেছে।        
     </div>
+
+    <!-- Fullscreen Modal -->
+    <div class="modal" id="imageModal">
+        <span class="close" id="closeBtn">&times;</span>
+        <span class="prev" id="prevBtn">&#10094;</span>
+        <img id="modalImg" src="" alt="">
+        <span class="next" id="nextBtn">&#10095;</span>
+    </div>
+
+    <script>
+        const images = document.querySelectorAll('.gallery img');
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        const closeBtn = document.getElementById('closeBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        let currentIndex = 0;
+
+        function openModal(index) {
+            modal.style.display = 'flex';
+            currentIndex = index;
+            modalImg.src = images[currentIndex].src;
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        function showPrev() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            modalImg.src = images[currentIndex].src;
+        }
+
+        function showNext() {
+            currentIndex = (currentIndex + 1) % images.length;
+            modalImg.src = images[currentIndex].src;
+        }
+
+        images.forEach((img, index) => {
+            img.addEventListener('click', () => openModal(index));
+        });
+
+        closeBtn.addEventListener('click', closeModal);
+        prevBtn.addEventListener('click', showPrev);
+        nextBtn.addEventListener('click', showNext);
+
+        // Swipe for mobile
+        let startX = 0;
+        modal.addEventListener('touchstart', e => {
+            startX = e.touches[0].clientX;
+        });
+        modal.addEventListener('touchend', e => {
+            let endX = e.changedTouches[0].clientX;
+            if (startX - endX > 50) {
+                showNext();
+            } else if (endX - startX > 50) {
+                showPrev();
+            }
+        });
+    </script>
 
 </body>
 </html>
-
